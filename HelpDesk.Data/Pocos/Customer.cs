@@ -14,10 +14,14 @@ namespace HelpDesk.Data.Pocos
         [StringLength(255)]
         public string LastNameTh { get; set; }
         [StringLength(255)]
-        public string FirsNameEn { get; set; }
+        public string FirstNameEn { get; set; }
         [StringLength(255)]
         public string LastNameEn { get; set; }
         [StringLength(10)]
         public string CompanyCode { get; set; }
+        [StringLength(20)]
+        public string UserType { get; set; }
+        [StringLength(50)]
+        public string TelNo { get; set; }
     }
 }

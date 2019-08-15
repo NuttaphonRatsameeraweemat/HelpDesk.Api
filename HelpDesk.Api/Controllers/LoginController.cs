@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HelpDesk.Bll.Interfaces;
 using HelpDesk.Bll.Models;
+using HelpDesk.Helper.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,24 @@ namespace HelpDesk.Api.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromBody]LoginViewModel auth)
         {
-            return Ok();
+            IActionResult response;
+            var result = new ResultViewModel();
+            result = _login.Authenticate(auth);
+            if (!result.IsError)
+            {
+                var model = _login.ManageClaimsIdentity(auth);
+                string token = _login.BuildToken();
+                var responseMessage = new
+                {
+                    Employee = model
+                };
+                _login.SetupCookie(HttpContext, token);
+
+                response = Ok(responseMessage);
+            }
+            else response = Unauthorized(result);
+
+            return response;
         }
 
         #endregion

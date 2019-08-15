@@ -16,12 +16,21 @@ namespace HelpDesk.Data
         {
         }
 
+        public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<Password> Password { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+
+            modelBuilder.Entity<Company>(entity =>
+            {
+                entity.HasKey(e => e.CompanyCode)
+                    .HasName("Company_pkey");
+
+                entity.Property(e => e.CompanyCode).ValueGeneratedNever();
+            });
 
             modelBuilder.Entity<Customer>(entity =>
             {

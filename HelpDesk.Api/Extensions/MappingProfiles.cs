@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using HelpDesk.Bll.Models;
+using HelpDesk.Data.Pocos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,8 @@ namespace HelpDesk.Api.Extensions
         /// </summary>
         public MappingProfiles()
         {
-
+            CreateMap<RegisterViewModel, Customer>();
+            CreateMap<Customer, RegisterViewModel>();
         }
 
         #endregion

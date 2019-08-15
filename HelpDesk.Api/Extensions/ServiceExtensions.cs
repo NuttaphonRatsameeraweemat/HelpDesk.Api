@@ -48,6 +48,7 @@ namespace HelpDesk.Api.Extensions
         public static void ConfigureBll(this IServiceCollection services)
         {
             services.AddScoped<ILoginBll, LoginBll>();
+            services.AddScoped<IRegisterBll, RegisterBll>();
         }
 
         /// <summary>
