@@ -20,6 +20,8 @@ namespace HelpDesk.Api.Extensions
         {
             CreateMap<RegisterViewModel, Customer>();
             CreateMap<Customer, RegisterViewModel>();
+            CreateMap<CompanyViewModel, Company>();
+            CreateMap<Company, CompanyViewModel>();
         }
 
         #endregion
