@@ -49,6 +49,7 @@ namespace HelpDesk.Api.Extensions
         {
             services.AddScoped<ILoginBll, LoginBll>();
             services.AddScoped<IRegisterBll, RegisterBll>();
+            services.AddScoped<IPasswordBll, PasswordBll>();
         }
 
         /// <summary>

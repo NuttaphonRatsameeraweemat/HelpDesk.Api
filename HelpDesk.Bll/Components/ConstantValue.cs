@@ -26,5 +26,14 @@ namespace HelpDesk.Bll.Components
         public const string HttpRequestFailedMessage = "Response StatusCode {0}, {1}";
         public const string DateIncorrectFormat = "The date value can't be empty and support only 'yyyy-MM-dd' format.";
         public const string YearIncorrectFormat = "The year value can't be empty and support only 'yyyy' format.";
+
+
+        //Email Template
+        public const string EmailForgetPasswordSubject = "Your New Password, Leaderplanet TicketIssue System.";
+        public const string EmailForgetPasswordBody =
+        @"Dear {0} <br /> 
+        You have requested a password reset, your new password is {1}. <br />
+        Please contact admin if you did not request a password change.";
+
     }
 }

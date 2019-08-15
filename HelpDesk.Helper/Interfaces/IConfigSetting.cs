@@ -31,6 +31,10 @@ namespace HelpDesk.Helper.Interfaces
         /// </summary>
         string SmtpPassword { get; }
         /// <summary>
+        /// Get Email Sender.
+        /// </summary>
+        string SmtpEmail { get; }
+        /// <summary>
         /// Get Json Web Token Config Issuer value.
         /// </summary>
         string JwtIssuer { get; }

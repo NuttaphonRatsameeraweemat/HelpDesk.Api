@@ -23,5 +23,6 @@ namespace HelpDesk.Data.Pocos
         public string UserType { get; set; }
         [StringLength(50)]
         public string TelNo { get; set; }
+        public bool? FirstLogin { get; set; }
     }
 }

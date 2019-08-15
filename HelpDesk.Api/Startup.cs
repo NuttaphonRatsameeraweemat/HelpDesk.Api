@@ -48,6 +48,7 @@ namespace HelpDesk.Api
             {
                 app.UseSwaager();
             }
+            app.UseAuthentication();
             app.ConfigureMiddleware();
             app.UseCors("CorsPolicy");
             app.UseMvc();

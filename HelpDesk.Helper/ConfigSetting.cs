@@ -62,6 +62,10 @@ namespace HelpDesk.Helper
         /// </summary>
         public string SmtpPassword => this.GetAppSetting("SMTP:Password");
         /// <summary>
+        /// Get Password Authenticate SMTP Server.
+        /// </summary>
+        public string SmtpEmail => this.GetAppSetting("SMTP:SenderEmail");
+        /// <summary>
         /// Get Json Web Token Config Issuer value.
         /// </summary>
         public string JwtIssuer => this.GetAppSetting("Jwt:Issuer");

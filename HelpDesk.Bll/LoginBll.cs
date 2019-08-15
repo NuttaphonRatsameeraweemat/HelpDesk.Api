@@ -106,7 +106,7 @@ namespace HelpDesk.Bll
         /// <param name="username">The identity user.</param>
         public EmployeeViewModel ManageClaimsIdentity(LoginViewModel login)
         {
-            var data = _unitOfWork.GetRepository<Customer>().Get(x => x.Email == login.Username).FirstOrDefault();
+            var data = _unitOfWork.GetRepository<Customer>().GetCache(x => x.Email == login.Username).FirstOrDefault();
             if (data == null)
             {
                 throw new ArgumentNullException(ConstantValue.HrEmployeeArgumentNullExceptionMessage);
@@ -117,11 +117,14 @@ namespace HelpDesk.Bll
                 LastNameTh = data.LastNameTh,
                 FirstNameEn = data.FirstNameEn,
                 LastNameEn = data.LastNameEn,
-                UserType = data.UserType
+                UserType = data.UserType,
+                FirstLogin = data.FirstLogin
             };
 
             _identity = new ClaimsIdentity();
             _identity.AddClaim(new Claim(ClaimTypes.Name, data.Email));
+            _identity.AddClaim(new Claim(ClaimTypes.Role, data.UserType));
+            _identity.AddClaim(new Claim(ConstantValue.ClamisNameEn, string.Format(ConstantValue.EmpTemplate, data.FirstNameEn, data.LastNameEn)));
             return result;
         }
 
