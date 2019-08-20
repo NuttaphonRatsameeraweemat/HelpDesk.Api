@@ -35,6 +35,9 @@ namespace HelpDesk.Bll.Models
         [StringLength(50, MinimumLength = 10, ErrorMessage = "Telephone number is incorrect format.")]
         public string TelNo { get; set; }
 
+        [Required]
+        public string CompanyCode { get; set; }
+
         public bool FirstLogin
         {
             get

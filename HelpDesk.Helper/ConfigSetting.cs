@@ -73,6 +73,10 @@ namespace HelpDesk.Helper
         /// Get Json Web Token Config Key value
         /// </summary>
         public string JwtKey => this.GetAppSetting("Jwt:Key");
+        /// <summary>
+        /// Get Email Support for notification when ticket open or update.
+        /// </summary>
+        public string EmailSupport => this.GetAppSetting("EmailSupport");
 
         #endregion
 

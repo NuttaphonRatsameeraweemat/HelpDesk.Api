@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace HelpDesk.Bll.Components
@@ -37,6 +38,14 @@ namespace HelpDesk.Bll.Components
         /// Get Ad User from payload token.
         /// </summary>
         public string Email => _httpContext.User.Identity.Name;
+        /// <summary>
+        /// Get Company Code from payload token.
+        /// </summary>
+        public string ComCode => _httpContext.User.Claims.FirstOrDefault(x => x.Type == ConstantValue.ClamisComCode)?.Value;
+        /// <summary>
+        /// Get Full Name from payload token.
+        /// </summary>
+        public string FullName => _httpContext.User.Claims.FirstOrDefault(x => x.Type == ConstantValue.ClamisFullName)?.Value;
 
         #endregion
 

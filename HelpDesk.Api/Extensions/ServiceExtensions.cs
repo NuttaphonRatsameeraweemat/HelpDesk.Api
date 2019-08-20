@@ -51,6 +51,9 @@ namespace HelpDesk.Api.Extensions
             services.AddScoped<IRegisterBll, RegisterBll>();
             services.AddScoped<IPasswordBll, PasswordBll>();
             services.AddScoped<ICompanyBll, CompanyBll>();
+            services.AddScoped<ITicketBll, TicketBll>();
+            services.AddScoped<ITicketCommentBll, TicketCommentBll>();
+            services.AddScoped<ITicketTransectionBll, TicketTransectionBll>();
         }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace HelpDesk.Api.Extensions
                             {
                                 IsError = true,
                                 StatusCode = context.Response.StatusCode,
-                                Message = $"{MessageValue.InternalServerError}"
+                                Message = $"{MessageValue.LoginFailed}"
                             };
                             string json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
                             {

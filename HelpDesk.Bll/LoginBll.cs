@@ -124,7 +124,8 @@ namespace HelpDesk.Bll
             _identity = new ClaimsIdentity();
             _identity.AddClaim(new Claim(ClaimTypes.Name, data.Email));
             _identity.AddClaim(new Claim(ClaimTypes.Role, data.UserType));
-            _identity.AddClaim(new Claim(ConstantValue.ClamisNameEn, string.Format(ConstantValue.EmpTemplate, data.FirstNameEn, data.LastNameEn)));
+            _identity.AddClaim(new Claim(ConstantValue.ClamisComCode, data.CompanyCode));
+            _identity.AddClaim(new Claim(ConstantValue.ClamisFullName, string.Format(ConstantValue.EmpTemplate, data.FirstNameEn, data.LastNameEn)));
             return result;
         }
 

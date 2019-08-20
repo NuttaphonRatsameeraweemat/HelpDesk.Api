@@ -42,5 +42,9 @@ namespace HelpDesk.Helper.Interfaces
         /// Get Json Web Token Config Key value
         /// </summary>
         string JwtKey { get; }
+        /// <summary>
+        /// Get Email Support for notification when ticket open or update.
+        /// </summary>
+        string EmailSupport { get; }
     }
 }

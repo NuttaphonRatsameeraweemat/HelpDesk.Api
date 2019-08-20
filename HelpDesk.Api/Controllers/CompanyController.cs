@@ -40,7 +40,7 @@ namespace HelpDesk.Api.Controllers
 
         #region [Methods]
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetList")]
         public IActionResult GetList()
         {

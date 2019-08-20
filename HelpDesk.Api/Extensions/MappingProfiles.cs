@@ -22,6 +22,8 @@ namespace HelpDesk.Api.Extensions
             CreateMap<Customer, RegisterViewModel>();
             CreateMap<CompanyViewModel, Company>();
             CreateMap<Company, CompanyViewModel>();
+            CreateMap<TicketViewModel, Ticket>();
+            CreateMap<Ticket, TicketViewModel>();
         }
 
         #endregion

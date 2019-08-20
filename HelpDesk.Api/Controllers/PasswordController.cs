@@ -42,7 +42,6 @@ namespace HelpDesk.Api.Controllers
 
         [HttpPost]
         [Route("ChangePassword")]
-        [AllowAnonymous]
         public IActionResult ChangePassword([FromBody]PasswordViewModel model)
         {
             return Ok(_password.ChangePassword(model));

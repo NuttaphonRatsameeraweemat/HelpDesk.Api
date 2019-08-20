@@ -10,5 +10,13 @@ namespace HelpDesk.Bll.Components.Interfaces
         /// Get email from payload token.
         /// </summary>
         string Email { get; }
+        /// <summary>
+        /// Get company code from payload token.
+        /// </summary>
+        string ComCode { get; }
+        /// <summary>
+        /// Get Full Name from payload token.
+        /// </summary>
+        string FullName { get; }
     }
 }
