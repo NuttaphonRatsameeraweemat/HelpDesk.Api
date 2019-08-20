@@ -44,10 +44,7 @@ namespace HelpDesk.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseSwaager();
-            }
+            app.UseSwaager();
             app.UseAuthentication();
             app.ConfigureMiddleware();
             app.UseCors("CorsPolicy");
