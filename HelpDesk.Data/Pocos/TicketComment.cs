@@ -12,7 +12,7 @@ namespace HelpDesk.Data.Pocos
         [Column("TicketID")]
         public int? TicketId { get; set; }
         public string Comment { get; set; }
-        [StringLength(10)]
+        [StringLength(255)]
         public string CommentBy { get; set; }
         [Column(TypeName = "date")]
         public DateTime? CommentDate { get; set; }

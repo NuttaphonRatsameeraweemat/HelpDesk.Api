@@ -9,7 +9,7 @@ namespace HelpDesk.Data.Pocos
     {
         [Column("ID")]
         public int Id { get; set; }
-        [StringLength(25)]
+        [StringLength(50)]
         public string TicketNo { get; set; }
         [StringLength(255)]
         public string TicketName { get; set; }
