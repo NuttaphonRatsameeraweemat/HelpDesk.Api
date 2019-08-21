@@ -123,7 +123,7 @@ namespace HelpDesk.Bll
                 _ticketTransection.SaveTicketTransection(data.Id, data.Status);
                 _unitOfWork.Complete(scope);
             }
-            this.SendEmailOpenTicket(model);
+            result = this.SendEmailOpenTicket(model);
             return result;
         }
 
@@ -148,7 +148,7 @@ namespace HelpDesk.Bll
                 _unitOfWork.GetRepository<Ticket>().Update(data);
                 _unitOfWork.Complete(scope);
             }
-            this.SendEmailUpdateTicket(model, model.Comment, receiver, emailDear);
+            result = this.SendEmailUpdateTicket(model, model.Comment, receiver, emailDear);
             return result;
         }
 
@@ -156,8 +156,9 @@ namespace HelpDesk.Bll
         /// Send Notification Email Open new ticket issue.
         /// </summary>
         /// <param name="model"></param>
-        private void SendEmailOpenTicket(TicketViewModel model)
+        private ResultViewModel SendEmailOpenTicket(TicketViewModel model)
         {
+            var result = new ResultViewModel();
             var emailModel = new EmailModel
             {
                 Sender = _config.SmtpEmail,
@@ -169,15 +170,24 @@ namespace HelpDesk.Bll
                                                                                    model.Description,
                                                                                    this.GetPriorityText(model.PriorityId))
             };
-            _emailService.SendEmail(emailModel);
+            try
+            {
+                _emailService.SendEmail(emailModel);
+            }
+            catch (Exception)
+            {
+                result.Message = ConstantValue.EmailCannotSending;
+            }
+            return result;
         }
 
         /// <summary>
         /// Send Notification Email Update ticket issue.
         /// </summary>
         /// <param name="model"></param>
-        private void SendEmailUpdateTicket(TicketViewModel model, string comment, string receiver, string emailDear)
+        private ResultViewModel SendEmailUpdateTicket(TicketViewModel model, string comment, string receiver, string emailDear)
         {
+            var result = new ResultViewModel();
             var emailModel = new EmailModel
             {
                 Sender = _config.SmtpEmail,
@@ -192,7 +202,15 @@ namespace HelpDesk.Bll
                                                                                    _token.FullName,
                                                                                    comment)
             };
-            _emailService.SendEmail(emailModel);
+            try
+            {
+                _emailService.SendEmail(emailModel);
+            }
+            catch (Exception)
+            {
+                result.Message = ConstantValue.EmailCannotSending;
+            }
+            return result;
         }
 
         /// <summary>
