@@ -107,6 +107,7 @@ namespace HelpDesk.Bll
                 var data = _mapper.Map<TicketViewModel, Ticket>(model);
                 data.CreateBy = _token.Email;
                 data.CreateDate = DateTime.Now;
+                data.CompanyCode = _token.ComCode;
                 _unitOfWork.GetRepository<Ticket>().Add(data);
                 _unitOfWork.Complete();
                 _ticketTransection.SaveTicketTransection(data.Id, data.Status);

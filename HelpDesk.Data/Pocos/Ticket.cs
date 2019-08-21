@@ -22,5 +22,7 @@ namespace HelpDesk.Data.Pocos
         public string CreateBy { get; set; }
         [Column(TypeName = "date")]
         public DateTime? CreateDate { get; set; }
+        [StringLength(10)]
+        public string CompanyCode { get; set; }
     }
 }
