@@ -84,6 +84,16 @@ namespace HelpDesk.Bll
         }
 
         /// <summary>
+        /// Get Ticket List by company code.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TicketViewModel> GetCompanyTicket()
+        {
+            return _mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+                _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode));
+        }
+
+        /// <summary>
         /// Get All ticket list in system.
         /// </summary>
         /// <returns></returns>

@@ -53,6 +53,13 @@ namespace HelpDesk.Api.Controllers
         }
 
         [HttpGet]
+        [Route("GetCompanyTicket")]
+        public IActionResult GetCompanyTicket()
+        {
+            return Ok(_ticket.GetCompanyTicket());
+        }
+
+        [HttpGet]
         [Route("GetAllTicket")]
         public IActionResult GetAllTicket()
         {
