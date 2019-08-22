@@ -6,7 +6,7 @@ namespace HelpDesk.Bll.Models
 {
     public class PriorityViewModel
     {
-        public int PriorityId { get; set; }
+        public int Id { get; set; }
         public string PriorityName { get; set; }
     }
 }
