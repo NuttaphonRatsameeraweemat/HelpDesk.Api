@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelpDesk.Bll.Components;
 using HelpDesk.Bll.Components.Interfaces;
 using HelpDesk.Bll.Interfaces;
 using HelpDesk.Bll.Models;
@@ -74,12 +75,15 @@ namespace HelpDesk.Bll
         {
             var result = new List<TicketCommentViewModel>();
             var comments = _unitOfWork.GetRepository<TicketComment>().Get(x => x.TicketId == ticketId);
+            var customer = _unitOfWork.GetRepository<Customer>().GetCache();
             foreach (var item in comments)
             {
+                var temp = customer.FirstOrDefault(x => x.Email == item.CommentBy);
                 var commentItem = new TicketCommentViewModel
                 {
                     Id = item.Id,
-                    Comment = item.Comment
+                    Comment = item.Comment,
+                    CommentByName = string.Format(ConstantValue.EmpTemplate, temp?.FirstNameEn, temp?.LastNameEn)
                 };
                 if (item.CommentBy == _token.Email)
                 {

@@ -8,6 +8,7 @@ namespace HelpDesk.Bll.Models
     {
         public int Id { get; set; }
         public string Comment { get; set; }
+        public string CommentByName { get; set; }
         public bool IsOwner { get; set; }
     }
 }
