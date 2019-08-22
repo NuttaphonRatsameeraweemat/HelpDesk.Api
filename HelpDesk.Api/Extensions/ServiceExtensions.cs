@@ -54,6 +54,7 @@ namespace HelpDesk.Api.Extensions
             services.AddScoped<ITicketBll, TicketBll>();
             services.AddScoped<ITicketCommentBll, TicketCommentBll>();
             services.AddScoped<ITicketTransectionBll, TicketTransectionBll>();
+            services.AddScoped<IPriorityBll, PriorityBll>();
         }
 
         /// <summary>

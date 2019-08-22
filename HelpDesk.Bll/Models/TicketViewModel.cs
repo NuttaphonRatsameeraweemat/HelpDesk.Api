@@ -11,6 +11,7 @@ namespace HelpDesk.Bll.Models
         public string TicketName { get; set; }
         public string Description { get; set; }
         public int PriorityId { get; set; }
+        public string PriorityName { get; set; }
         public string Status { get; set; }
         public string Comment { get; set; }
         public string CompanyCode { get; set; }

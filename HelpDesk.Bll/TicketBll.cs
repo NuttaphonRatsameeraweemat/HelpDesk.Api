@@ -79,8 +79,8 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetList()
         {
-            return _mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email));
+            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+                _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email)));
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetCompanyTicket()
         {
-            return _mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode));
+            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+                _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode)));
         }
 
         /// <summary>
@@ -99,8 +99,24 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetAllTicket()
         {
-            return _mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get());
+            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+                _unitOfWork.GetRepository<Ticket>().Get()));
+        }
+
+        /// <summary>
+        /// Initial Ticket view model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private IEnumerable<TicketViewModel> InitialTicketViewModel(IEnumerable<TicketViewModel> model)
+        {
+            var priority = _unitOfWork.GetRepository<Priority>().GetCache();
+            foreach (var item in model)
+            {
+                var temp = priority.FirstOrDefault(x => x.Id == item.PriorityId);
+                item.PriorityName = temp.PriorityName;
+            }
+            return model;
         }
 
         /// <summary>
