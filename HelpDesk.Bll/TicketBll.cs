@@ -114,7 +114,7 @@ namespace HelpDesk.Bll
             foreach (var item in model)
             {
                 var temp = priority.FirstOrDefault(x => x.Id == item.PriorityId);
-                item.PriorityName = temp.PriorityName;
+                item.PriorityName = temp?.PriorityName;
             }
             return model;
         }
