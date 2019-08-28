@@ -18,6 +18,7 @@ namespace HelpDesk.Data
 
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<EmailTask> EmailTask { get; set; }
         public virtual DbSet<Password> Password { get; set; }
         public virtual DbSet<Priority> Priority { get; set; }
         public virtual DbSet<Ticket> Ticket { get; set; }

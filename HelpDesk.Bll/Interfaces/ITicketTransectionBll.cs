@@ -8,6 +8,12 @@ namespace HelpDesk.Bll.Interfaces
     public interface ITicketTransectionBll
     {
         /// <summary>
+        /// Get Ticket available time.
+        /// </summary>
+        /// <param name="ticketId">The identity ticket.</param>
+        /// <returns></returns>
+        int GetTime(int ticketId);
+        /// <summary>
         /// Insert new ticket transection to table.
         /// </summary>
         /// <param name="ticketId">The identity ticket.</param>

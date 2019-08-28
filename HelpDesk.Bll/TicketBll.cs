@@ -79,8 +79,13 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetList()
         {
-            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+            var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
                 _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email)));
+            foreach (var item in data)
+            {
+                item.OnlineTime = _ticketTransection.GetTime(item.Id);
+            }
+            return data;
         }
 
         /// <summary>
@@ -89,8 +94,13 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetCompanyTicket()
         {
-            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+            var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
                 _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode)));
+            foreach (var item in data)
+            {
+                item.OnlineTime = _ticketTransection.GetTime(item.Id);
+            }
+            return data;
         }
 
         /// <summary>
@@ -99,8 +109,13 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetAllTicket()
         {
-            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+            var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
                 _unitOfWork.GetRepository<Ticket>().Get()));
+            foreach (var item in data)
+            {
+                item.OnlineTime = _ticketTransection.GetTime(item.Id);
+            }
+            return data;
         }
 
         /// <summary>
@@ -175,6 +190,7 @@ namespace HelpDesk.Bll
         private ResultViewModel SendEmailOpenTicket(TicketViewModel model)
         {
             var result = new ResultViewModel();
+            string status = ConstantValue.EmailSendingError;
             var emailModel = new EmailModel
             {
                 Sender = _config.SmtpEmail,
@@ -189,12 +205,27 @@ namespace HelpDesk.Bll
             try
             {
                 _emailService.SendEmail(emailModel);
+                status = ConstantValue.EmailSendingComplete;
             }
             catch (Exception)
             {
                 result.Message = ConstantValue.EmailCannotSending;
             }
+            this.SaveEmailTask(_mapper.Map<EmailModel, EmailTask>(emailModel), status);
             return result;
+        }
+
+        /// <summary>
+        /// Save the email task
+        /// </summary>
+        /// <param name="email">The email information value.</param>
+        /// <param name="status">The eamil status sendding or not.</param>
+        private void SaveEmailTask(EmailTask email, string status)
+        {
+            email.Status = status;
+            email.CreateDate = DateTime.Now;
+            _unitOfWork.GetRepository<EmailTask>().Add(email);
+            _unitOfWork.Complete();
         }
 
         /// <summary>
@@ -204,6 +235,7 @@ namespace HelpDesk.Bll
         private ResultViewModel SendEmailUpdateTicket(TicketViewModel model, string comment, string receiver, string emailDear)
         {
             var result = new ResultViewModel();
+            string status = ConstantValue.EmailSendingError;
             var emailModel = new EmailModel
             {
                 Sender = _config.SmtpEmail,
@@ -221,11 +253,13 @@ namespace HelpDesk.Bll
             try
             {
                 _emailService.SendEmail(emailModel);
+                status = ConstantValue.EmailSendingComplete;
             }
             catch (Exception)
             {
                 result.Message = ConstantValue.EmailCannotSending;
             }
+            this.SaveEmailTask(_mapper.Map<EmailModel, EmailTask>(emailModel), status);
             return result;
         }
 

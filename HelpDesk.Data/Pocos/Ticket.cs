@@ -20,7 +20,7 @@ namespace HelpDesk.Data.Pocos
         public string Status { get; set; }
         [StringLength(255)]
         public string CreateBy { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "timestamp(0) without time zone")]
         public DateTime? CreateDate { get; set; }
         [StringLength(10)]
         public string CompanyCode { get; set; }

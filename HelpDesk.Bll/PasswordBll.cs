@@ -1,4 +1,5 @@
-﻿using HelpDesk.Bll.Components;
+﻿using AutoMapper;
+using HelpDesk.Bll.Components;
 using HelpDesk.Bll.Components.Interfaces;
 using HelpDesk.Bll.Interfaces;
 using HelpDesk.Bll.Models;
@@ -36,6 +37,10 @@ namespace HelpDesk.Bll
         /// The config value in appsetting.json
         /// </summary>
         private readonly IConfigSetting _config;
+        /// <summary>
+        /// The auto mapper.
+        /// </summary>
+        private readonly IMapper _mapper;
 
         #endregion
 
@@ -47,12 +52,13 @@ namespace HelpDesk.Bll
         /// <param name="unitOfWork">The utilities unit of work.</param>
         /// <param name="emailService">The email service provides email functionality.</param>
         /// <param name="token">The ClaimsIdentity in token management.</param>
-        public PasswordBll(IUnitOfWork unitOfWork, IEmailService emailService, IManageToken token, IConfigSetting config)
+        public PasswordBll(IUnitOfWork unitOfWork, IEmailService emailService, IManageToken token, IConfigSetting config, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _emailService = emailService;
             _token = token;
             _config = config;
+            _mapper = mapper;
         }
 
         #endregion
@@ -124,8 +130,8 @@ namespace HelpDesk.Bll
                     this.UpdateFirstLogin(model.Email, true);
                     scope.Complete();
                 }
-                _emailService.SendEmail(this.InitialForgetPasswordEmail(model.Email, newPassword,
-                    string.Format(ConstantValue.EmpTemplate, model.FirstNameEn, model.LastNameEn)));
+                result = this.SendEmailForgetPassword(model.Email, newPassword,
+                    string.Format(ConstantValue.EmpTemplate, model.FirstNameEn, model.LastNameEn));
             }
             else result = UtilityService.InitialResultError(MessageValue.ForgetPasswordAlert);
             return result;
@@ -159,21 +165,47 @@ namespace HelpDesk.Bll
         }
 
         /// <summary>
-        /// Initial forget password email information.
+        /// Send email forget password.
         /// </summary>
         /// <param name="receiver">The receiver email.</param>
         /// <param name="newPassword">The new password reset.</param>
         /// <param name="contactName">The contact full name.</param>
         /// <returns></returns>
-        private EmailModel InitialForgetPasswordEmail(string receiver, string newPassword, string contactName)
+        private ResultViewModel SendEmailForgetPassword(string receiver, string newPassword, string contactName)
         {
-            return new EmailModel
+            var result = new ResultViewModel();
+            string status = ConstantValue.EmailSendingError;
+            var emailModel = new EmailModel
             {
                 Sender = _config.SmtpEmail,
                 Receiver = receiver,
                 Subject = ConstantValue.EmailForgetPasswordSubject,
                 Body = string.Format(ConstantValue.EmailForgetPasswordBody, contactName, newPassword)
             };
+            try
+            {
+                _emailService.SendEmail(emailModel);
+                status = ConstantValue.EmailSendingComplete;
+            }
+            catch (Exception)
+            {
+                result.Message = ConstantValue.EmailCannotSending;
+            }
+            this.SaveEmailTask(_mapper.Map<EmailModel, EmailTask>(emailModel), status);
+            return result;
+        }
+
+        /// <summary>
+        /// Save the email task
+        /// </summary>
+        /// <param name="email">The email information value.</param>
+        /// <param name="status">The eamil status sendding or not.</param>
+        private void SaveEmailTask(EmailTask email, string status)
+        {
+            email.Status = status;
+            email.CreateDate = DateTime.Now;
+            _unitOfWork.GetRepository<EmailTask>().Add(email);
+            _unitOfWork.Complete();
         }
 
         #endregion

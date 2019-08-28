@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HelpDesk.Bll.Models;
 using HelpDesk.Data.Pocos;
+using HelpDesk.Helper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace HelpDesk.Api.Extensions
             CreateMap<Ticket, TicketViewModel>();
             CreateMap<PriorityViewModel, Priority>();
             CreateMap<Priority, PriorityViewModel>();
+            CreateMap<EmailModel, EmailTask>();
+            CreateMap<EmailTask, EmailModel>();
         }
 
         #endregion

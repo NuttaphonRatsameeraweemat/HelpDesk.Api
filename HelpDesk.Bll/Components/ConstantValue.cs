@@ -31,7 +31,9 @@ namespace HelpDesk.Bll.Components
         public const string TicketStatusOpen = "OPEN";
         public const string TicketStatusWaiting = "WAITING";
         public const string TicketStatusClose = "CLOSE";
-
+        //Email Status
+        public const string EmailSendingComplete = "SEND";
+        public const string EmailSendingError = "ERROR";
         //Email Template
         public const string EmailForgetPasswordSubject = "Your New Password, Leaderplanet TicketIssue System.";
         public const string EmailForgetPasswordBody =

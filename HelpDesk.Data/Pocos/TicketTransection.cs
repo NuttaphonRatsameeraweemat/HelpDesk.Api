@@ -11,9 +11,9 @@ namespace HelpDesk.Data.Pocos
         public int Id { get; set; }
         [Column("TicketID")]
         public int? TicketId { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "timestamp(0) without time zone")]
         public DateTime? StartDate { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "timestamp(0) without time zone")]
         public DateTime? EndDate { get; set; }
         [StringLength(255)]
         public string Status { get; set; }

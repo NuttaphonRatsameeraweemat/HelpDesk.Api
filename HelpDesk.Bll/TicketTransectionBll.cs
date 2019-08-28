@@ -41,6 +41,33 @@ namespace HelpDesk.Bll
         #region [Methods]
 
         /// <summary>
+        /// Get Ticket available time.
+        /// </summary>
+        /// <param name="ticketId">The identity ticket.</param>
+        /// <returns></returns>
+        public int GetTime(int ticketId)
+        {
+            int result = 0;
+            var transections = _unitOfWork.GetRepository<TicketTransection>().Get(x => x.TicketId == ticketId);
+            foreach (var item in transections)
+            {
+                if (item.Status == ConstantValue.TicketStatusWaiting || item.Status == ConstantValue.TicketStatusClose)
+                {
+                    continue;
+                }
+                var endTime = DateTime.Now;
+                if (item.EndDate.HasValue)
+                {
+                    endTime = item.EndDate.Value;
+                }
+
+                var diffTime = endTime - item.StartDate.Value;
+                result = Convert.ToInt32(diffTime.TotalMinutes);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Insert new ticket transection to table.
         /// </summary>
         /// <param name="ticketId">The identity ticket.</param>
