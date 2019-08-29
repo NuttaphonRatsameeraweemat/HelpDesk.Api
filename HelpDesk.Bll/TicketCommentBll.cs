@@ -74,7 +74,7 @@ namespace HelpDesk.Bll
         public IEnumerable<TicketCommentViewModel> LoadComment(int ticketId)
         {
             var result = new List<TicketCommentViewModel>();
-            var comments = _unitOfWork.GetRepository<TicketComment>().Get(x => x.TicketId == ticketId);
+            var comments = _unitOfWork.GetRepository<TicketComment>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id));
             var customer = _unitOfWork.GetRepository<Customer>().GetCache();
             foreach (var item in comments)
             {

@@ -48,7 +48,7 @@ namespace HelpDesk.Bll
         public int GetTime(int ticketId)
         {
             int result = 0;
-            var transections = _unitOfWork.GetRepository<TicketTransection>().Get(x => x.TicketId == ticketId);
+            var transections = _unitOfWork.GetRepository<TicketTransection>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id));
             foreach (var item in transections)
             {
                 if (item.Status == ConstantValue.TicketStatusWaiting || item.Status == ConstantValue.TicketStatusClose)

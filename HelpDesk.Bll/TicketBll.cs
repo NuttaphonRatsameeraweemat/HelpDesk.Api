@@ -80,7 +80,7 @@ namespace HelpDesk.Bll
         public IEnumerable<TicketViewModel> GetList()
         {
             var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email)));
+                _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email, x => x.OrderBy(y => y.Id))));
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -95,7 +95,7 @@ namespace HelpDesk.Bll
         public IEnumerable<TicketViewModel> GetCompanyTicket()
         {
             var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode)));
+                _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode, x => x.OrderBy(y => y.Id))));
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -110,7 +110,7 @@ namespace HelpDesk.Bll
         public IEnumerable<TicketViewModel> GetAllTicket()
         {
             var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get()));
+                _unitOfWork.GetRepository<Ticket>().Get(orderBy: x => x.OrderBy(y => y.Id))));
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -170,7 +170,7 @@ namespace HelpDesk.Bll
             string emailDear = string.Empty;
             using (TransactionScope scope = new TransactionScope())
             {
-                var data = _unitOfWork.GetRepository<Ticket>().Get(x => x.Id == model.Id).FirstOrDefault();
+                var data = _unitOfWork.GetRepository<Ticket>().GetById(model.Id);
                 _ticketTransection.UpdateTicketStatus(data.Id, data.Status, model.Status);
                 _ticketComment.SaveTicketComment(data.Id, model.Comment);
                 data.Status = model.Status;
