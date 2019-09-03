@@ -172,7 +172,10 @@ namespace HelpDesk.Bll
             {
                 var data = _unitOfWork.GetRepository<Ticket>().GetById(model.Id);
                 _ticketTransection.UpdateTicketStatus(data.Id, data.Status, model.Status);
-                _ticketComment.SaveTicketComment(data.Id, model.Comment);
+                if (!string.IsNullOrEmpty(model.Comment))
+                {
+                    _ticketComment.SaveTicketComment(data.Id, model.Comment);
+                }
                 data.Status = model.Status;
                 receiver = this.GetEmailReceiver(data.CreateBy);
                 emailDear = this.GetDearEmailBody(data.CreateBy);
