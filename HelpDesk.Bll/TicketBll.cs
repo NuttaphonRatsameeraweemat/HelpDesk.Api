@@ -80,12 +80,10 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetList()
         {
-            var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email, x => x.OrderBy(y => y.Id))));
-            //var data = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
-            //{
-            //    return this.FuncGetValue().ToList();
-            //}).Where(x => x.CreateBy == _token.Email);
+            var data = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            }).Where(x => x.CreateBy == _token.Email).OrderByDescending(x => x.Id);
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -99,8 +97,10 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetCompanyTicket()
         {
-            var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(x => x.CompanyCode == _token.ComCode, x => x.OrderBy(y => y.Id))));
+            var data = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            }).Where(x => x.CompanyCode == _token.ComCode).OrderByDescending(x => x.Id);
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -114,8 +114,10 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketViewModel> GetAllTicket()
         {
-            var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
-                _unitOfWork.GetRepository<Ticket>().Get(orderBy: x => x.OrderBy(y => y.Id))));
+            var data = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            }).OrderByDescending(x => x.Id);
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -173,7 +175,7 @@ namespace HelpDesk.Bll
                 data.CompanyCode = _token.ComCode;
                 _unitOfWork.GetRepository<Ticket>().Add(data);
                 _unitOfWork.Complete();
-                //this.SaveRedisCacheTicket(data);
+                this.SaveRedisCacheTicket(data);
                 _ticketTransection.SaveTicketTransection(data.Id, data.Status);
                 _unitOfWork.Complete(scope);
             }
@@ -227,10 +229,26 @@ namespace HelpDesk.Bll
                 receiver = this.GetEmailReceiver(data.CreateBy);
                 emailDear = this.GetDearEmailBody(data.CreateBy);
                 _unitOfWork.GetRepository<Ticket>().Update(data);
+                this.UpdateRedisCacheTicket(model);
                 _unitOfWork.Complete(scope);
             }
             result = this.SendEmailUpdateTicket(model, model.Comment, receiver, emailDear);
             return result;
+        }
+
+        /// <summary>
+        /// Save new ticket to redis cache.
+        /// </summary>
+        /// <param name="data">The ticket information.</param>
+        private void UpdateRedisCacheTicket(TicketViewModel model)
+        {
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            });
+            var item = ticketList.FirstOrDefault(x => x.Id == model.Id);
+            item.Status = model.Status;
+            RedisCacheHandler.SetValue(ConstantValue.TicketInfoKey, ticketList);
         }
 
         /// <summary>
