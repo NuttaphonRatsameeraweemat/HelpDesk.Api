@@ -5,6 +5,7 @@ using HelpDesk.Bll.Interfaces;
 using HelpDesk.Bll.Models;
 using HelpDesk.Data.Pocos;
 using HelpDesk.Data.Repository.Interfaces;
+using HelpDesk.Helper;
 using HelpDesk.Helper.Interfaces;
 using HelpDesk.Helper.Models;
 using System;
@@ -81,6 +82,10 @@ namespace HelpDesk.Bll
         {
             var data = this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
                 _unitOfWork.GetRepository<Ticket>().Get(x => x.CreateBy == _token.Email, x => x.OrderBy(y => y.Id))));
+            //var data = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            //{
+            //    return this.FuncGetValue().ToList();
+            //}).Where(x => x.CreateBy == _token.Email);
             foreach (var item in data)
             {
                 item.OnlineTime = _ticketTransection.GetTime(item.Id);
@@ -126,11 +131,28 @@ namespace HelpDesk.Bll
         private IEnumerable<TicketViewModel> InitialTicketViewModel(IEnumerable<TicketViewModel> model)
         {
             var priority = _unitOfWork.GetRepository<Priority>().GetCache();
+            var customerInfo = _unitOfWork.GetRepository<Customer>().GetCache();
             foreach (var item in model)
             {
-                var temp = priority.FirstOrDefault(x => x.Id == item.PriorityId);
-                item.PriorityName = temp?.PriorityName;
+                var tempPriority = priority.FirstOrDefault(x => x.Id == item.PriorityId);
+                var tempCustomer = customerInfo.FirstOrDefault(x => x.Email == item.CreateBy);
+                item.PriorityName = tempPriority?.PriorityName;
+                item.CreateName = string.Format(ConstantValue.EmpTemplate, tempCustomer?.FirstNameEn, tempCustomer?.LastNameEn);
             }
+            return model;
+        }
+
+        /// <summary>
+        /// Initial Ticket view model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private TicketViewModel InitialTicketViewModel(TicketViewModel model)
+        {
+            var priority = _unitOfWork.GetRepository<Priority>().GetCache(x => x.Id == model.PriorityId).FirstOrDefault();
+            var customerInfo = _unitOfWork.GetRepository<Customer>().GetCache(x => x.Email == model.CreateBy).FirstOrDefault();
+            model.PriorityName = priority?.PriorityName;
+            model.CreateName = string.Format(ConstantValue.EmpTemplate, customerInfo?.FirstNameEn, customerInfo?.LastNameEn);
             return model;
         }
 
@@ -151,11 +173,36 @@ namespace HelpDesk.Bll
                 data.CompanyCode = _token.ComCode;
                 _unitOfWork.GetRepository<Ticket>().Add(data);
                 _unitOfWork.Complete();
+                //this.SaveRedisCacheTicket(data);
                 _ticketTransection.SaveTicketTransection(data.Id, data.Status);
                 _unitOfWork.Complete(scope);
             }
             result = this.SendEmailOpenTicket(model);
             return result;
+        }
+
+        /// <summary>
+        /// Save new ticket to redis cache.
+        /// </summary>
+        /// <param name="data">The ticket information.</param>
+        private void SaveRedisCacheTicket(Ticket data)
+        {
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            });
+            ticketList.Add(this.InitialTicketViewModel(_mapper.Map<Ticket, TicketViewModel>(data)));
+            RedisCacheHandler.SetValue(ConstantValue.TicketInfoKey, ticketList);
+        }
+
+        /// <summary>
+        /// Function get value to redis cache.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<TicketViewModel> FuncGetValue()
+        {
+            return this.InitialTicketViewModel(_mapper.Map<IEnumerable<Ticket>, IEnumerable<TicketViewModel>>(
+                _unitOfWork.GetRepository<Ticket>().Get(orderBy: x => x.OrderBy(y => y.Id))));
         }
 
         /// <summary>

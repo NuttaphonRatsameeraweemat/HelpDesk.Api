@@ -11,6 +11,10 @@ namespace HelpDesk.Bll.Components
         public const string ClamisFullName = "FullName";
         //Response Header Content Type Format
         public const string ContentTypeJson = "application/json";
+        //Redis Keys
+        public const string TicketInfoKey = "Ticket";
+        public const string TicketTransectionKey = "TicketTransection";
+        public const string TicketCommentKey = "TicketComment";
         //UserType
         public const string UserTypeAdmin = "ADMIN";
         public const string UserTypeUser = "USER";

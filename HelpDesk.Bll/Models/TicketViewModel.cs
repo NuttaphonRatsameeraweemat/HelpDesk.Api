@@ -15,6 +15,9 @@ namespace HelpDesk.Bll.Models
         public string Status { get; set; }
         public string Comment { get; set; }
         public string CompanyCode { get; set; }
+        public string CreateBy { get; set; }
+        public string CreateName { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int OnlineTime { get; set; }
     }
 }

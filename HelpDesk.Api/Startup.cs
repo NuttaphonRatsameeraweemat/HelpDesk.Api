@@ -24,6 +24,7 @@ namespace HelpDesk.Api
         {
             //Add Configure Extension and Bll class.
             services.ConfigureRepository(Configuration);
+            services.ConfigureRedisCache(Configuration);
             services.ConfigureBll();
             services.ConfigureHttpContextAccessor();
             services.ConfigureLoggerService();

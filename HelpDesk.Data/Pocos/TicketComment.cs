@@ -14,7 +14,7 @@ namespace HelpDesk.Data.Pocos
         public string Comment { get; set; }
         [StringLength(255)]
         public string CommentBy { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "timestamp(0) without time zone")]
         public DateTime? CommentDate { get; set; }
     }
 }

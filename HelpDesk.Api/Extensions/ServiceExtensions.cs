@@ -42,6 +42,16 @@ namespace HelpDesk.Api.Extensions
         }
 
         /// <summary>
+        /// Dependency Injection Repository and UnitOfWork.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="Configuration">The configuration from settinfile.</param>
+        public static void ConfigureRedisCache(this IServiceCollection services, IConfiguration Configuration)
+        {
+            RedisCacheHandler.ConnectionString = Configuration["ConnectionStrings:RedisCacheConnection"];
+        }
+
+        /// <summary>
         /// Dependency Injection Class Business Logic Layer.
         /// </summary>
         /// <param name="services">The service collection.</param>
