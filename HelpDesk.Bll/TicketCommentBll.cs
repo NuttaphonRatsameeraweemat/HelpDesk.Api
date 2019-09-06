@@ -74,21 +74,21 @@ namespace HelpDesk.Bll
         /// <param name="data">The ticket information.</param>
         private void SaveRedisCacheTicketComments(TicketComment data)
         {
-            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketCommentKey, () =>
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketCommentKey + data.TicketId.Value.ToString(), () =>
             {
-                return this.FuncGetValue().ToList();
+                return this.FuncGetValue(data.TicketId.Value).ToList();
             });
             ticketList.Add(this.InitialTicketCommentViewModel(data));
-            RedisCacheHandler.SetValue(ConstantValue.TicketCommentKey, ticketList);
+            RedisCacheHandler.SetValue(ConstantValue.TicketCommentKey + data.TicketId.Value.ToString(), ticketList);
         }
 
         /// <summary>
         /// Function get value to redis cache.
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<TicketCommentViewModel> FuncGetValue()
+        private IEnumerable<TicketCommentViewModel> FuncGetValue(int ticketId)
         {
-            return this.InitialTicketCommentViewModel(_unitOfWork.GetRepository<TicketComment>().Get(orderBy: x => x.OrderBy(y => y.Id)));
+            return this.InitialTicketCommentViewModel(_unitOfWork.GetRepository<TicketComment>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id)));
         }
 
         /// <summary>
@@ -143,10 +143,10 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketCommentViewModel> LoadComment(int ticketId)
         {
-            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketCommentKey, () =>
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketCommentKey + ticketId, () =>
             {
-                return this.FuncGetValue().ToList();
-            }).Where(x => x.TicketId == ticketId).OrderBy(y => y.Id);
+                return this.FuncGetValue(ticketId).ToList();
+            }).OrderBy(y => y.Id);
             foreach (var item in ticketList)
             {
                 if (item.CommentBy == _token.Email)

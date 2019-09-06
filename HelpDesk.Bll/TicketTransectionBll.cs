@@ -50,7 +50,10 @@ namespace HelpDesk.Bll
         public int GetTime(int ticketId)
         {
             int result = 0;
-            var transections = _unitOfWork.GetRepository<TicketTransection>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id));
+            var transections = RedisCacheHandler.GetValue(ConstantValue.TicketTransectionKey + ticketId.ToString(), () =>
+            {
+                return this.FuncGetValue(ticketId).ToList();
+            });
             foreach (var item in transections)
             {
                 if (item.Status == ConstantValue.TicketStatusWaiting || item.Status == ConstantValue.TicketStatusClose)
@@ -128,21 +131,21 @@ namespace HelpDesk.Bll
         /// <param name="data">The ticket information.</param>
         private void SaveRedisCacheTicketTransection(TicketTransection data)
         {
-            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketTransectionKey, () =>
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketTransectionKey + data.TicketId.ToString(), () =>
             {
-                return this.FuncGetValue().ToList();
+                return this.FuncGetValue(data.TicketId.Value).ToList();
             });
             ticketList.Add(data);
-            RedisCacheHandler.SetValue(ConstantValue.TicketTransectionKey, ticketList);
+            RedisCacheHandler.SetValue(ConstantValue.TicketTransectionKey + data.Id.ToString(), ticketList);
         }
 
         /// <summary>
         /// Function get value to redis cache.
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<TicketTransection> FuncGetValue()
+        private IEnumerable<TicketTransection> FuncGetValue(int ticketId)
         {
-            return _unitOfWork.GetRepository<TicketTransection>().Get(orderBy: x => x.OrderBy(y => y.Id));
+            return _unitOfWork.GetRepository<TicketTransection>().Get(x => x.Id == ticketId, x => x.OrderBy(y => y.Id));
         }
 
         /// <summary>
@@ -151,9 +154,9 @@ namespace HelpDesk.Bll
         /// <param name="data">The ticket information.</param>
         private void UpdateRedisCacheTicketTransection(TicketTransection model)
         {
-            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketTransectionKey, () =>
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketTransectionKey + model.TicketId.ToString(), () =>
             {
-                return this.FuncGetValue().ToList();
+                return this.FuncGetValue(model.TicketId.Value).ToList();
             });
             var item = ticketList.FirstOrDefault(x => x.Id == model.Id);
             item.EndDate = model.EndDate;
