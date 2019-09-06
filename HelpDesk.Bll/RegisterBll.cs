@@ -105,6 +105,15 @@ namespace HelpDesk.Bll
             return result;
         }
 
+        /// <summary>
+        /// Reload cache when register action.
+        /// </summary>
+        private void ReloadCacheRegister()
+        {
+            _unitOfWork.GetRepository<Customer>().ReCache();
+            _unitOfWork.GetRepository<Password>().ReCache();
+        }
+
         #endregion
 
     }

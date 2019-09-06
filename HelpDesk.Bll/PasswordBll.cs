@@ -79,8 +79,9 @@ namespace HelpDesk.Bll
                 {
                     this.SavePassword(_token.Email, model.NewPassword);
                     this.UpdateFirstLogin(_token.Email, false);
-                    scope.Complete();
+                    _unitOfWork.Complete(scope);
                 }
+                this.ReloadCache();
             }
             else result = UtilityService.InitialResultError(MessageValue.WrongPassword);
             return result;
@@ -98,7 +99,6 @@ namespace HelpDesk.Bll
             var newData = new Password { Email = email, Password1 = password.GetHash() };
             _unitOfWork.GetRepository<Password>().Remove(data);
             _unitOfWork.GetRepository<Password>().Add(newData);
-            _unitOfWork.Complete();
         }
 
         /// <summary>
@@ -128,8 +128,9 @@ namespace HelpDesk.Bll
                 {
                     this.SavePassword(model.Email, newPassword);
                     this.UpdateFirstLogin(model.Email, true);
-                    scope.Complete();
+                    _unitOfWork.Complete(scope);
                 }
+                this.ReloadCache();
                 result = this.SendEmailForgetPassword(model.Email, newPassword,
                     string.Format(ConstantValue.EmpTemplate, model.FirstNameEn, model.LastNameEn));
             }
@@ -160,8 +161,6 @@ namespace HelpDesk.Bll
             var data = _unitOfWork.GetRepository<Customer>().GetCache(x => x.Email == email).FirstOrDefault();
             data.FirstLogin = isFirst;
             _unitOfWork.GetRepository<Customer>().Update(data);
-            _unitOfWork.Complete();
-            _unitOfWork.GetRepository<Customer>().ReCache();
         }
 
         /// <summary>
@@ -206,6 +205,15 @@ namespace HelpDesk.Bll
             email.CreateDate = DateTime.Now;
             _unitOfWork.GetRepository<EmailTask>().Add(email);
             _unitOfWork.Complete();
+        }
+
+        /// <summary>
+        /// Reload cahce when action change data.
+        /// </summary>
+        private void ReloadCache()
+        {
+            _unitOfWork.GetRepository<Customer>().ReCache();
+            _unitOfWork.GetRepository<Password>().ReCache();
         }
 
         #endregion
