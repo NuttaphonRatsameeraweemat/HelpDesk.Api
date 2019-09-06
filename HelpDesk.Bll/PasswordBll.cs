@@ -185,7 +185,7 @@ namespace HelpDesk.Bll
             try
             {
                 //_emailService.SendEmail(emailModel);
-                _emailService.SendEmailWithTemplate(emailModel);
+                _emailService.SendEmailForgotPasswordTemplate(emailModel);
                 status = ConstantValue.EmailSendingComplete;
             }
             catch (Exception)

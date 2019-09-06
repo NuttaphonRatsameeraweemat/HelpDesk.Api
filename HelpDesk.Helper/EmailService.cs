@@ -47,7 +47,7 @@ namespace HelpDesk.Helper
         /// Send email with specified template.
         /// </summary>
         /// <param name="email">Email detail.</param>
-        public void SendEmailWithTemplate(EmailModel email)
+        public void SendEmailForgotPasswordTemplate(EmailModel email)
         {
             //Call method to send the email.
             string htmlTemplate = string.Empty;
@@ -57,6 +57,24 @@ namespace HelpDesk.Helper
                 htmlTemplate = stream.ReadToEnd();
             }
             email.Body = htmlTemplate.Replace("%NEWPASSWORD%", email.Body);
+            this.SendTheEmail(email);
+        }
+        /// <summary>
+        /// Send email with specified template.
+        /// </summary>
+        /// <param name="email">Email detail.</param>
+        public void SendEmailNotificationTemplate(EmailModel email, string ticketNo, string from)
+        {
+            //Call method to send the email.
+            string htmlTemplate = string.Empty;
+            string path = Directory.GetCurrentDirectory() + @"\EmailTemplate\Notification.html";
+            using (var stream = new System.IO.StreamReader(path))
+            {
+                htmlTemplate = stream.ReadToEnd();
+            }
+            htmlTemplate = htmlTemplate.Replace("%TICKETNO%", ticketNo);
+            htmlTemplate = htmlTemplate.Replace("%FROM%", from);
+            email.Body = htmlTemplate;
             this.SendTheEmail(email);
         }
         /// <summary>
