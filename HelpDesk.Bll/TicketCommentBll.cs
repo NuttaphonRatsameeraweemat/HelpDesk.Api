@@ -83,7 +83,8 @@ namespace HelpDesk.Bll
                 {
                     Id = item.Id,
                     Comment = item.Comment,
-                    CommentByName = string.Format(ConstantValue.EmpTemplate, temp?.FirstNameEn, temp?.LastNameEn)
+                    CommentByName = string.Format(ConstantValue.EmpTemplate, temp?.FirstNameEn, temp?.LastNameEn),
+                    CommentDate = item.CommentDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
                 };
                 if (item.CommentBy == _token.Email)
                 {

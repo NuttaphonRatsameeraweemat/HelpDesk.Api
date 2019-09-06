@@ -133,7 +133,7 @@ namespace HelpDesk.Bll
                 result = this.SendEmailForgetPassword(model.Email, newPassword,
                     string.Format(ConstantValue.EmpTemplate, model.FirstNameEn, model.LastNameEn));
             }
-            else result = UtilityService.InitialResultError(MessageValue.ForgetPasswordAlert);
+            else result = UtilityService.InitialResultError(MessageValue.ForgetPasswordAlert, 200);
             return result;
         }
 
