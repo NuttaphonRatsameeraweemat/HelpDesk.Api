@@ -5,6 +5,7 @@ using HelpDesk.Bll.Interfaces;
 using HelpDesk.Bll.Models;
 using HelpDesk.Data.Pocos;
 using HelpDesk.Data.Repository.Interfaces;
+using HelpDesk.Helper;
 using HelpDesk.Helper.Models;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,76 @@ namespace HelpDesk.Bll
             };
             _unitOfWork.GetRepository<TicketComment>().Add(data);
             _unitOfWork.Complete();
+            this.SaveRedisCacheTicketComments(data);
             return result;
+        }
+
+        /// <summary>
+        /// Save new ticket comment to redis cache.
+        /// </summary>
+        /// <param name="data">The ticket information.</param>
+        private void SaveRedisCacheTicketComments(TicketComment data)
+        {
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketCommentKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            });
+            ticketList.Add(this.InitialTicketCommentViewModel(data));
+            RedisCacheHandler.SetValue(ConstantValue.TicketCommentKey, ticketList);
+        }
+
+        /// <summary>
+        /// Function get value to redis cache.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<TicketCommentViewModel> FuncGetValue()
+        {
+            return this.InitialTicketCommentViewModel(_unitOfWork.GetRepository<TicketComment>().Get(orderBy: x => x.OrderBy(y => y.Id)));
+        }
+
+        /// <summary>
+        /// Initial Mapping ticket comment to viewmodel.
+        /// </summary>
+        /// <param name="ticketComments">The ticket comment.</param>
+        /// <returns></returns>
+        private IEnumerable<TicketCommentViewModel> InitialTicketCommentViewModel(IEnumerable<TicketComment> ticketComments)
+        {
+            var result = new List<TicketCommentViewModel>();
+            var customer = _unitOfWork.GetRepository<Customer>().GetCache();
+            foreach (var item in ticketComments)
+            {
+                var temp = customer.FirstOrDefault(x => x.Email == item.CommentBy);
+                var commentItem = new TicketCommentViewModel
+                {
+                    Id = item.Id,
+                    TicketId = item.TicketId.Value,
+                    Comment = item.Comment,
+                    CommentBy = item.CommentBy,
+                    CommentByName = string.Format(ConstantValue.EmpTemplate, temp?.FirstNameEn, temp?.LastNameEn),
+                    CommentDate = item.CommentDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+                result.Add(commentItem);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Initial Mapping ticket comment to viewmodel.
+        /// </summary>
+        /// <param name="ticketComment">The ticket comment.</param>
+        /// <returns></returns>
+        private TicketCommentViewModel InitialTicketCommentViewModel(TicketComment ticketComment)
+        {
+            var customer = _unitOfWork.GetRepository<Customer>().GetCache(x => x.Email == ticketComment.CommentBy).FirstOrDefault();
+            return new TicketCommentViewModel
+            {
+                Id = ticketComment.Id,
+                TicketId = ticketComment.TicketId.Value,
+                Comment = ticketComment.Comment,
+                CommentBy = ticketComment.CommentBy,
+                CommentByName = string.Format(ConstantValue.EmpTemplate, customer?.FirstNameEn, customer?.LastNameEn),
+                CommentDate = ticketComment.CommentDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
+            };
         }
 
         /// <summary>
@@ -73,26 +143,18 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         public IEnumerable<TicketCommentViewModel> LoadComment(int ticketId)
         {
-            var result = new List<TicketCommentViewModel>();
-            var comments = _unitOfWork.GetRepository<TicketComment>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id));
-            var customer = _unitOfWork.GetRepository<Customer>().GetCache();
-            foreach (var item in comments)
+            var ticketList = RedisCacheHandler.GetValue(ConstantValue.TicketCommentKey, () =>
             {
-                var temp = customer.FirstOrDefault(x => x.Email == item.CommentBy);
-                var commentItem = new TicketCommentViewModel
-                {
-                    Id = item.Id,
-                    Comment = item.Comment,
-                    CommentByName = string.Format(ConstantValue.EmpTemplate, temp?.FirstNameEn, temp?.LastNameEn),
-                    CommentDate = item.CommentDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                };
+                return this.FuncGetValue().ToList();
+            }).Where(x => x.TicketId == ticketId).OrderBy(y => y.Id);
+            foreach (var item in ticketList)
+            {
                 if (item.CommentBy == _token.Email)
                 {
-                    commentItem.IsOwner = true;
+                    item.IsOwner = true;
                 }
-                result.Add(commentItem);
             }
-            return result;
+            return ticketList;
         }
 
         #endregion

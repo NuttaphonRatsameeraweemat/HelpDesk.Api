@@ -179,11 +179,13 @@ namespace HelpDesk.Bll
                 Sender = _config.SmtpEmail,
                 Receiver = receiver,
                 Subject = ConstantValue.EmailForgetPasswordSubject,
-                Body = string.Format(ConstantValue.EmailForgetPasswordBody, contactName, newPassword)
+                //Body = string.Format(ConstantValue.EmailForgetPasswordBody, contactName, newPassword)
+                Body = newPassword
             };
             try
             {
-                _emailService.SendEmail(emailModel);
+                //_emailService.SendEmail(emailModel);
+                _emailService.SendEmailWithTemplate(emailModel);
                 status = ConstantValue.EmailSendingComplete;
             }
             catch (Exception)

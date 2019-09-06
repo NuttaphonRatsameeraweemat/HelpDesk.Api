@@ -1,6 +1,7 @@
 ﻿using HelpDesk.Helper.Interfaces;
 using HelpDesk.Helper.Models;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
 
@@ -49,6 +50,13 @@ namespace HelpDesk.Helper
         public void SendEmailWithTemplate(EmailModel email)
         {
             //Call method to send the email.
+            string htmlTemplate = string.Empty;
+            string path = Directory.GetCurrentDirectory() + @"\EmailTemplate\ForgotPassword.html";
+            using (var stream = new System.IO.StreamReader(path))
+            {
+                htmlTemplate = stream.ReadToEnd();
+            }
+            email.Body = htmlTemplate.Replace("%NEWPASSWORD%", email.Body);
             this.SendTheEmail(email);
         }
         /// <summary>
@@ -83,6 +91,7 @@ namespace HelpDesk.Helper
             mailItem.Subject = email.Subject;
             mailItem.IsBodyHtml = true;
             mailItem.Body = email.Body;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
             try
             {
                 //Send an email 
