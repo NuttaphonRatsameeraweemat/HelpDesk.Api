@@ -50,10 +50,7 @@ namespace HelpDesk.Bll
         public int GetTime(int ticketId)
         {
             int result = 0;
-            var transections = RedisCacheHandler.GetValue(ConstantValue.TicketTransectionKey, () =>
-            {
-                return this.FuncGetValue().ToList();
-            }).Where(x => x.TicketId == ticketId).OrderBy(y => y.Id);
+            var transections = _unitOfWork.GetRepository<TicketTransection>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id));
             foreach (var item in transections)
             {
                 if (item.Status == ConstantValue.TicketStatusWaiting || item.Status == ConstantValue.TicketStatusClose)
@@ -89,7 +86,6 @@ namespace HelpDesk.Bll
             };
             _unitOfWork.GetRepository<TicketTransection>().Add(data);
             _unitOfWork.Complete();
-            this.SaveRedisCacheTicketTransection(data);
             return result;
         }
 
@@ -124,7 +120,6 @@ namespace HelpDesk.Bll
             oldTransection.EndDate = DateTime.Now;
             _unitOfWork.GetRepository<TicketTransection>().Update(oldTransection);
             _unitOfWork.Complete();
-            this.UpdateRedisCacheTicketTransection(oldTransection);
         }
 
         /// <summary>
