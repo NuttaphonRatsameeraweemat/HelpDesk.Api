@@ -53,7 +53,8 @@ namespace HelpDesk.Api.Controllers
                 string token = _login.BuildToken();
                 var responseMessage = new
                 {
-                    Employee = model
+                    Employee = model,
+                    Token = token
                 };
                 _login.SetupCookie(HttpContext, token);
 

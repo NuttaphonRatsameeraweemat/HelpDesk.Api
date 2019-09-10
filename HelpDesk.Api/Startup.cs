@@ -30,7 +30,7 @@ namespace HelpDesk.Api
             services.ConfigureLoggerService();
             services.ConfigureCors();
             services.ConfigureJwtAuthen(Configuration);
-            services.ConfigureCookieAuthen(Configuration);
+            //services.ConfigureCookieAuthen(Configuration);
             services.ConfigureEmailService();
             services.ConfigureComponent();
             services.AddAutoMapper();

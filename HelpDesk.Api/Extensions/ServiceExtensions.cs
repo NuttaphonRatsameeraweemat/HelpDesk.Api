@@ -213,7 +213,7 @@ namespace HelpDesk.Api.Extensions
                          {
                              IsError = true,
                              StatusCode = context.Response.StatusCode,
-                             Message = $"{MessageValue.InternalServerError}"
+                             Message = $"{MessageValue.LoginFailed}"
                          };
                          string json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
                          {
