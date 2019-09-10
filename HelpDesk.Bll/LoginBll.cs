@@ -93,7 +93,7 @@ namespace HelpDesk.Bll
 
             var token = new JwtSecurityToken(_config.JwtIssuer,
               _config.JwtIssuer,
-              expires: DateTime.Now.AddMinutes(30),
+              expires: DateTime.Now.AddMinutes(600),
               signingCredentials: creds,
               claims: this.GetClaimsPrincipal(principal));
 
