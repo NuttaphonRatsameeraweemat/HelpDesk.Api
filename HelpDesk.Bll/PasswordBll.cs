@@ -11,6 +11,7 @@ using HelpDesk.Helper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Transactions;
 
@@ -83,7 +84,7 @@ namespace HelpDesk.Bll
                 }
                 this.ReloadCache();
             }
-            else result = UtilityService.InitialResultError(MessageValue.WrongPassword);
+            else result = UtilityService.InitialResultError(MessageValue.WrongPassword, (int)HttpStatusCode.BadRequest);
             return result;
         }
 
