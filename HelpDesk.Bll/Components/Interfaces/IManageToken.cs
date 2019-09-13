@@ -18,5 +18,9 @@ namespace HelpDesk.Bll.Components.Interfaces
         /// Get Full Name from payload token.
         /// </summary>
         string FullName { get; }
+        /// <summary>
+        /// Get user type from payload token.
+        /// </summary>
+        string UserType { get; }
     }
 }

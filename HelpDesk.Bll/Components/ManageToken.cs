@@ -46,6 +46,10 @@ namespace HelpDesk.Bll.Components
         /// Get Full Name from payload token.
         /// </summary>
         public string FullName => _httpContext.User.Claims.FirstOrDefault(x => x.Type == ConstantValue.ClamisFullName)?.Value;
+        /// <summary>
+        /// Get user type from payload token.
+        /// </summary>
+        public string UserType => _httpContext.User.Claims.FirstOrDefault(x => x.Type == ConstantValue.ClamisUserType)?.Value;
 
         #endregion
 

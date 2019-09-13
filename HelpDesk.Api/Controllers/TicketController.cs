@@ -60,6 +60,13 @@ namespace HelpDesk.Api.Controllers
         }
 
         [HttpGet]
+        [Route("GetAssignTicket")]
+        public IActionResult GetAssignTicket()
+        {
+            return Ok(_ticket.GetAssignTicket());
+        }
+
+        [HttpGet]
         [Route("GetAllTicket")]
         public IActionResult GetAllTicket()
         {

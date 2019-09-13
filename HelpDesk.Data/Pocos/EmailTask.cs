@@ -18,7 +18,7 @@ namespace HelpDesk.Data.Pocos
         public string Body { get; set; }
         [StringLength(50)]
         public string Status { get; set; }
-        [Column(TypeName = "timestamp with time zone")]
+        [Column(TypeName = "timestamp(6) with time zone")]
         public DateTime? CreateDate { get; set; }
     }
 }

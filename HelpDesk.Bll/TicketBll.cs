@@ -109,6 +109,23 @@ namespace HelpDesk.Bll
         }
 
         /// <summary>
+        /// Get Ticket List by assign to code.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TicketViewModel> GetAssignTicket()
+        {
+            var data = RedisCacheHandler.GetValue(ConstantValue.TicketInfoKey, () =>
+            {
+                return this.FuncGetValue().ToList();
+            }).Where(x => x.AssignTo == _token.ComCode).OrderByDescending(x => x.Id);
+            foreach (var item in data)
+            {
+                item.OnlineTime = _ticketTransection.GetTime(item.Id);
+            }
+            return data;
+        }
+
+        /// <summary>
         /// Get All ticket list in system.
         /// </summary>
         /// <returns></returns>

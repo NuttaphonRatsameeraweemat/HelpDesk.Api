@@ -8,6 +8,7 @@ namespace HelpDesk.Bll.Components
     {
         //Claims Type
         public const string ClamisComCode = "ComCode";
+        public const string ClamisUserType = "UserType";
         public const string ClamisFullName = "FullName";
         //Response Header Content Type Format
         public const string ContentTypeJson = "application/json";

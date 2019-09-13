@@ -19,6 +19,11 @@ namespace HelpDesk.Bll.Interfaces
         /// <returns></returns>
         IEnumerable<TicketViewModel> GetCompanyTicket();
         /// <summary>
+        /// Get Ticket List by assign to code.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<TicketViewModel> GetAssignTicket();
+        /// <summary>
         /// Get All ticket list in system.
         /// </summary>
         /// <returns></returns>

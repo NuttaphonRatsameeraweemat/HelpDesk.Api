@@ -18,6 +18,7 @@ namespace HelpDesk.Bll.Models
         public string CreateBy { get; set; }
         public string CreateName { get; set; }
         public DateTime? CreateDate { get; set; }
+        public string AssignTo { get; set; }
         public int OnlineTime { get; set; }
     }
 }
