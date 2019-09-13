@@ -118,6 +118,7 @@ namespace HelpDesk.Bll
                 FirstNameEn = data.FirstNameEn,
                 LastNameEn = data.LastNameEn,
                 UserType = data.UserType,
+                CompanyCode = data.CompanyCode,
                 FirstLogin = data.FirstLogin
             };
 

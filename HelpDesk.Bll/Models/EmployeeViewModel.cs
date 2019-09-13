@@ -11,6 +11,7 @@ namespace HelpDesk.Bll.Models
         public string FirstNameEn { get; set; }
         public string LastNameEn { get; set; }
         public string UserType { get; set; }
+        public string CompanyCode { get; set; }
         public bool? FirstLogin { get; set; }
     }
 }
