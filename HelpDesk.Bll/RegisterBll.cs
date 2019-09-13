@@ -61,6 +61,7 @@ namespace HelpDesk.Bll
                     this.SavePassword(formData);
                     scope.Complete();
                 }
+                this.ReloadCacheRegister();
             }
             return result;
         }
