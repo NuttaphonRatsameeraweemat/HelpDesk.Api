@@ -9,10 +9,8 @@ using HelpDesk.Helper;
 using HelpDesk.Helper.Interfaces;
 using HelpDesk.Helper.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Transactions;
 
 namespace HelpDesk.Bll
@@ -42,10 +40,6 @@ namespace HelpDesk.Bll
         /// The auto mapper.
         /// </summary>
         private readonly IMapper _mapper;
-        /// <summary>
-        /// The Logger.
-        /// </summary>
-        private readonly ILoggerManager _logger;
 
         #endregion
 
@@ -57,14 +51,13 @@ namespace HelpDesk.Bll
         /// <param name="unitOfWork">The utilities unit of work.</param>
         /// <param name="emailService">The email service provides email functionality.</param>
         /// <param name="token">The ClaimsIdentity in token management.</param>
-        public PasswordBll(IUnitOfWork unitOfWork, IEmailService emailService, IManageToken token, IConfigSetting config, IMapper mapper, ILoggerManager logger)
+        public PasswordBll(IUnitOfWork unitOfWork, IEmailService emailService, IManageToken token, IConfigSetting config, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _emailService = emailService;
             _token = token;
             _config = config;
             _mapper = mapper;
-            _logger = logger;
         }
 
         #endregion
@@ -79,7 +72,6 @@ namespace HelpDesk.Bll
         public ResultViewModel ChangePassword(PasswordViewModel model)
         {
             var result = new ResultViewModel();
-            _logger.LogDebug($"OldPassword = {model.OldPassword}, New Password = {model.NewPassword}, Token = {_token.Email}");
             if (this.ValidatePassword(model.OldPassword))
             {
                 using (TransactionScope scope = new TransactionScope())

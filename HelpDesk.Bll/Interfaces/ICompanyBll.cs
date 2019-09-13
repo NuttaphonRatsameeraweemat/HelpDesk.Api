@@ -12,5 +12,10 @@ namespace HelpDesk.Bll.Interfaces
         /// </summary>
         /// <returns></returns>
         IEnumerable<CompanyViewModel> GetList();
+        /// <summary>
+        /// Get Company List.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CompanyViewModel> GetPartner();
     }
 }

@@ -11,5 +11,7 @@ namespace HelpDesk.Data.Pocos
         public string CompanyCode { get; set; }
         [StringLength(255)]
         public string CompanyName { get; set; }
+        [StringLength(10)]
+        public string Type { get; set; }
     }
 }

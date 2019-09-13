@@ -19,6 +19,9 @@ namespace HelpDesk.Bll.Components
         //UserType
         public const string UserTypeAdmin = "ADMIN";
         public const string UserTypeUser = "USER";
+        //Conpany Type
+        public const string CompanyTypePartner = "PARTNER";
+        public const string CompanyTypeVendor = "VENDOR";
         //Date format
         public const string DateTimeFormat = "yyyy-MM-dd";
         //Template format.

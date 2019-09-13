@@ -47,6 +47,13 @@ namespace HelpDesk.Api.Controllers
             return Ok(_company.GetList());
         }
 
+        [HttpGet]
+        [Route("GetPartner")]
+        public IActionResult GetPartner()
+        {
+            return Ok(_company.GetPartner());
+        }
+
         #endregion
 
     }

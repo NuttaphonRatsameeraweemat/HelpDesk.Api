@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelpDesk.Bll.Components;
 using HelpDesk.Bll.Interfaces;
 using HelpDesk.Bll.Models;
 using HelpDesk.Data.Pocos;
@@ -50,7 +51,17 @@ namespace HelpDesk.Bll
             return _mapper.Map<IEnumerable<Company>, IEnumerable<CompanyViewModel>>(_unitOfWork.GetRepository<Company>().GetCache());
         }
 
+        /// <summary>
+        /// Get Company List.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CompanyViewModel> GetPartner()
+        {
+            return _mapper.Map<IEnumerable<Company>, IEnumerable<CompanyViewModel>>(
+                _unitOfWork.GetRepository<Company>().GetCache(x => x.Type == ConstantValue.CompanyTypePartner));
+        }
+
         #endregion
-        
+
     }
 }
