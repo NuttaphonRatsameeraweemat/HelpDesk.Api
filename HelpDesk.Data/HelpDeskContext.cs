@@ -24,6 +24,7 @@ namespace HelpDesk.Data
         public virtual DbSet<Ticket> Ticket { get; set; }
         public virtual DbSet<TicketComment> TicketComment { get; set; }
         public virtual DbSet<TicketTransection> TicketTransection { get; set; }
+        public virtual DbSet<ValueHelp> ValueHelp { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +50,12 @@ namespace HelpDesk.Data
             {
                 entity.HasKey(e => new { e.Email, e.Password1 })
                     .HasName("Password_pkey");
+            });
+
+            modelBuilder.Entity<ValueHelp>(entity =>
+            {
+                entity.HasKey(e => new { e.ValueType, e.ValueKey })
+                    .HasName("ValueHelp_pkey");
             });
         }
     }

@@ -29,6 +29,8 @@ namespace HelpDesk.Bll.Components
         //Regular expresstion format date
         public const string RegexDateFormat = @"^[0-9]{4}-[0-9]{2}-[0-9]{2}$";
         public const string RegexYearFormat = @"^[0-9]{4}$";
+        //ValueHelp Type
+        public const string ValueTypeTicketStatus = "TicketStatus";
         //Error Log Messages.
         public const string HrEmployeeArgumentNullExceptionMessage = "The {0} hasn't in Customer Table.";
         public const string HttpRequestFailedMessage = "Response StatusCode {0}, {1}";

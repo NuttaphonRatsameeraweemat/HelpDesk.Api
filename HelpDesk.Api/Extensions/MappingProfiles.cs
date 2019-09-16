@@ -29,6 +29,8 @@ namespace HelpDesk.Api.Extensions
             CreateMap<Priority, PriorityViewModel>();
             CreateMap<EmailModel, EmailTask>();
             CreateMap<EmailTask, EmailModel>();
+            CreateMap<ValueHelpViewModel, ValueHelp>();
+            CreateMap<ValueHelp, ValueHelpViewModel>();
         }
 
         #endregion

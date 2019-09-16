@@ -36,7 +36,7 @@ namespace HelpDesk.Api.Controllers
 
         [HttpGet]
         [Route("GetRole")]
-        public IActionResult ValidateEmail()
+        public IActionResult GetRole()
         {
             return Ok(new List<ValueHelpViewModel>
             {
