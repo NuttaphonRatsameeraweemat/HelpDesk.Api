@@ -63,7 +63,7 @@ namespace HelpDesk.Helper
         /// Send email with specified template.
         /// </summary>
         /// <param name="email">Email detail.</param>
-        public void SendEmailNotificationTemplate(EmailModel email, string ticketNo, string from)
+        public void SendEmailNotificationTemplate(EmailModel email, string ticketNo, string from, string ticketName, string description)
         {
             //Call method to send the email.
             string htmlTemplate = string.Empty;
@@ -74,6 +74,8 @@ namespace HelpDesk.Helper
             }
             htmlTemplate = htmlTemplate.Replace("%TICKETNO%", ticketNo);
             htmlTemplate = htmlTemplate.Replace("%FROM%", from);
+            htmlTemplate = htmlTemplate.Replace("%TICKETNAME%", ticketName);
+            htmlTemplate = htmlTemplate.Replace("%TICKETDESCRIPTION%", description);
             email.Body = htmlTemplate;
             this.SendTheEmail(email);
         }

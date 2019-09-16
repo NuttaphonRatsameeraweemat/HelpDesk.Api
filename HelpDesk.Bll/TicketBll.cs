@@ -289,7 +289,7 @@ namespace HelpDesk.Bll
             };
             try
             {
-                _emailService.SendEmailNotificationTemplate(emailModel, model.TicketNo, _token.FullName);
+                _emailService.SendEmailNotificationTemplate(emailModel, model.TicketNo, _token.FullName, model.TicketName, model.Description);
                 status = ConstantValue.EmailSendingComplete;
             }
             catch (Exception)
@@ -337,7 +337,7 @@ namespace HelpDesk.Bll
             };
             try
             {
-                _emailService.SendEmailNotificationTemplate(emailModel, model.TicketNo, _token.FullName);
+                _emailService.SendEmailNotificationTemplate(emailModel, model.TicketNo, _token.FullName, model.TicketName, model.Description);
                 status = ConstantValue.EmailSendingComplete;
             }
             catch (Exception)

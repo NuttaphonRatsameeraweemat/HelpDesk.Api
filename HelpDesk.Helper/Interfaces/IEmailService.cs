@@ -18,6 +18,6 @@ namespace HelpDesk.Helper.Interfaces
         /// Send email with specified template.
         /// </summary>
         /// <param name="email">Email detail.</param>
-        void SendEmailNotificationTemplate(EmailModel email, string ticketNo, string from);
+        void SendEmailNotificationTemplate(EmailModel email, string ticketNo, string from, string ticketName, string description);
     }
 }
