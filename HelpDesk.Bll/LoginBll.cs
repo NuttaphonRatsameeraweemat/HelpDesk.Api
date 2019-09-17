@@ -159,7 +159,8 @@ namespace HelpDesk.Bll
                 Path = "/",
                 HttpOnly = false, // to prevent XSS
                 Secure = false, // set to true in production
-                Expires = System.DateTime.UtcNow.AddMinutes(600) // token life time
+                Expires = System.DateTime.UtcNow.AddMinutes(600), // token life time
+                Domain = null
             });
         }
 

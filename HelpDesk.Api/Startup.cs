@@ -29,8 +29,8 @@ namespace HelpDesk.Api
             services.ConfigureHttpContextAccessor();
             services.ConfigureLoggerService();
             services.ConfigureCors();
-            services.ConfigureJwtAuthen(Configuration);
-            //services.ConfigureCookieAuthen(Configuration);
+            //services.ConfigureJwtAuthen(Configuration);
+            services.ConfigureCookieAuthen(Configuration);
             services.ConfigureEmailService();
             services.ConfigureComponent();
             services.AddAutoMapper();

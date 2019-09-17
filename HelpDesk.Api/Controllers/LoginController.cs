@@ -56,6 +56,7 @@ namespace HelpDesk.Api.Controllers
                     Employee = model,
                     Token = token
                 };
+                _login.SetupCookie(HttpContext, token);
                 response = Ok(responseMessage);
             }
             else response = Unauthorized(result);
