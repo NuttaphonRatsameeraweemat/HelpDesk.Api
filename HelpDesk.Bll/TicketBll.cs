@@ -234,9 +234,10 @@ namespace HelpDesk.Bll
             var result = new ResultViewModel();
             string receiver = string.Empty;
             string emailDear = string.Empty;
+            var data = _unitOfWork.GetRepository<Ticket>().GetById(model.Id);
+            var ticketInfo = _mapper.Map<Ticket, TicketViewModel>(data);
             using (TransactionScope scope = new TransactionScope())
             {
-                var data = _unitOfWork.GetRepository<Ticket>().GetById(model.Id);
                 _ticketTransection.UpdateTicketStatus(data.Id, data.Status, model.Status);
                 if (!string.IsNullOrEmpty(model.Comment))
                 {
@@ -249,7 +250,7 @@ namespace HelpDesk.Bll
                 this.UpdateRedisCacheTicket(model);
                 _unitOfWork.Complete(scope);
             }
-            result = this.SendEmailUpdateTicket(model, model.Comment, receiver, emailDear);
+            result = this.SendEmailUpdateTicket(ticketInfo, model.Comment, receiver, emailDear, model.Status);
             return result;
         }
 
@@ -317,7 +318,7 @@ namespace HelpDesk.Bll
         /// Send Notification Email Update ticket issue.
         /// </summary>
         /// <param name="model"></param>
-        private ResultViewModel SendEmailUpdateTicket(TicketViewModel model, string comment, string receiver, string emailDear)
+        private ResultViewModel SendEmailUpdateTicket(TicketViewModel model, string comment, string receiver, string emailDear, string ticketStatus)
         {
             var result = new ResultViewModel();
             string status = ConstantValue.EmailSendingError;
@@ -325,13 +326,13 @@ namespace HelpDesk.Bll
             {
                 Sender = _config.SmtpEmail,
                 Receiver = receiver,
-                Subject = string.Format(ConstantValue.EmailNotificationUpdateTicketSubject, model.TicketNo, model.Status),
+                Subject = string.Format(ConstantValue.EmailNotificationUpdateTicketSubject, model.TicketNo, ticketStatus),
                 Body = string.Format(ConstantValue.EmailNotificationUpdateTicketBody, emailDear,
                                                                                    model.TicketNo,
                                                                                    model.TicketName,
                                                                                    model.Description,
                                                                                    this.GetPriorityText(model.PriorityId),
-                                                                                   model.Status,
+                                                                                   ticketStatus,
                                                                                    _token.FullName,
                                                                                    comment)
             };
