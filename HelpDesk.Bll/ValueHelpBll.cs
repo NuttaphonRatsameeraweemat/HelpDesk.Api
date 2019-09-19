@@ -5,6 +5,7 @@ using HelpDesk.Data.Pocos;
 using HelpDesk.Data.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace HelpDesk.Bll
@@ -47,7 +48,7 @@ namespace HelpDesk.Bll
         public IEnumerable<ValueHelpViewModel> Get(string type)
         {
             return _mapper.Map<IEnumerable<ValueHelp>, IEnumerable<ValueHelpViewModel>>(
-                _unitOfWork.GetRepository<ValueHelp>().GetCache(x => x.ValueType == type));
+                _unitOfWork.GetRepository<ValueHelp>().GetCache(x => x.ValueType == type, x => x.OrderBy(y => y.Sequence)));
         }
 
         #endregion
