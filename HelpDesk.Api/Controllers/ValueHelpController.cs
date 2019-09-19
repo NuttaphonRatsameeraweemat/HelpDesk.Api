@@ -42,6 +42,13 @@ namespace HelpDesk.Api.Controllers
             return Ok(_valueHelp.Get(ConstantValue.ValueTypeTicketStatus));
         }
 
+        [HttpGet]
+        [Route("GetTicketType")]
+        public IActionResult GetTicketType()
+        {
+            return Ok(_valueHelp.Get(ConstantValue.ValueTypeTicketType));
+        }
+
         #endregion
 
     }

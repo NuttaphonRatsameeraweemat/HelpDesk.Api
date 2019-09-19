@@ -20,5 +20,7 @@ namespace HelpDesk.Bll.Models
         public DateTime? CreateDate { get; set; }
         public string AssignTo { get; set; }
         public int OnlineTime { get; set; }
+        public string TicketType { get; set; }
+        public string TicketTypeName { get; set; }
     }
 }

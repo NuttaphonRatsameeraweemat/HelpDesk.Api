@@ -151,11 +151,14 @@ namespace HelpDesk.Bll
         {
             var priority = _unitOfWork.GetRepository<Priority>().GetCache();
             var customerInfo = _unitOfWork.GetRepository<Customer>().GetCache();
+            var valueHelp = _unitOfWork.GetRepository<ValueHelp>().GetCache(x => x.ValueType == ConstantValue.ValueTypeTicketType);
             foreach (var item in model)
             {
                 var tempPriority = priority.FirstOrDefault(x => x.Id == item.PriorityId);
                 var tempCustomer = customerInfo.FirstOrDefault(x => x.Email == item.CreateBy);
+                var ticketType = valueHelp.FirstOrDefault(x => x.ValueKey == item.TicketType);
                 item.PriorityName = tempPriority?.PriorityName;
+                item.TicketTypeName = ticketType?.ValueText;
                 item.CreateName = string.Format(ConstantValue.EmpTemplate, tempCustomer?.FirstNameEn, tempCustomer?.LastNameEn);
             }
             return model;
@@ -170,7 +173,9 @@ namespace HelpDesk.Bll
         {
             var priority = _unitOfWork.GetRepository<Priority>().GetCache(x => x.Id == model.PriorityId).FirstOrDefault();
             var customerInfo = _unitOfWork.GetRepository<Customer>().GetCache(x => x.Email == model.CreateBy).FirstOrDefault();
+            var valueHelp = _unitOfWork.GetRepository<ValueHelp>().GetCache(x => x.ValueType == ConstantValue.ValueTypeTicketType && x.ValueKey == model.TicketType).FirstOrDefault();
             model.PriorityName = priority?.PriorityName;
+            model.TicketTypeName = valueHelp?.ValueText;
             model.CreateName = string.Format(ConstantValue.EmpTemplate, customerInfo?.FirstNameEn, customerInfo?.LastNameEn);
             return model;
         }

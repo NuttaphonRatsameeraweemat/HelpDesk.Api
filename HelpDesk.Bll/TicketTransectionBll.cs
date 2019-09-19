@@ -56,7 +56,8 @@ namespace HelpDesk.Bll
             });
             foreach (var item in transections)
             {
-                if (item.Status == ConstantValue.TicketStatusWaiting || item.Status == ConstantValue.TicketStatusClose)
+                if (item.Status == ConstantValue.TicketStatusWaiting || item.Status == ConstantValue.TicketStatusClose ||
+                    item.Status == ConstantValue.TicketStatusGetReq)
                 {
                     continue;
                 }

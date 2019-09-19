@@ -31,6 +31,7 @@ namespace HelpDesk.Bll.Components
         public const string RegexYearFormat = @"^[0-9]{4}$";
         //ValueHelp Type
         public const string ValueTypeTicketStatus = "TicketStatus";
+        public const string ValueTypeTicketType = "TicketType";
         //Error Log Messages.
         public const string HrEmployeeArgumentNullExceptionMessage = "The {0} hasn't in Customer Table.";
         public const string HttpRequestFailedMessage = "Response StatusCode {0}, {1}";
@@ -41,6 +42,7 @@ namespace HelpDesk.Bll.Components
         public const string TicketStatusOpen = "OPEN";
         public const string TicketStatusWaiting = "WAITING";
         public const string TicketStatusClose = "CLOSE";
+        public const string TicketStatusGetReq = "GETREQ";
         //Email Status
         public const string EmailSendingComplete = "SEND";
         public const string EmailSendingError = "ERROR";

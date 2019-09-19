@@ -26,5 +26,7 @@ namespace HelpDesk.Data.Pocos
         public string CompanyCode { get; set; }
         [StringLength(10)]
         public string AssignTo { get; set; }
+        [StringLength(10)]
+        public string TicketType { get; set; }
     }
 }

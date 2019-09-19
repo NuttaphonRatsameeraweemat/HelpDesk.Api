@@ -43,6 +43,7 @@ namespace HelpDesk.Bll
             _unitOfWork.GetRepository<Customer>().ReCache();
             _unitOfWork.GetRepository<Password>().ReCache();
             _unitOfWork.GetRepository<Priority>().ReCache();
+            _unitOfWork.GetRepository<ValueHelp>().ReCache();
         }
 
         #endregion
