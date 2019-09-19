@@ -248,6 +248,10 @@ namespace HelpDesk.Bll
                 {
                     _ticketComment.SaveTicketComment(data.Id, model.Comment);
                 }
+                if (model.EstimateTime.HasValue)
+                {
+                    data.EstimateTime = model.EstimateTime;
+                }
                 data.Status = model.Status;
                 receiver = this.GetEmailReceiver(data.CreateBy);
                 emailDear = this.GetDearEmailBody(data.CreateBy);
@@ -270,6 +274,10 @@ namespace HelpDesk.Bll
                 return this.FuncGetValue().ToList();
             });
             var item = ticketList.FirstOrDefault(x => x.Id == model.Id);
+            if (model.EstimateTime.HasValue)
+            {
+                item.EstimateTime = model.EstimateTime;
+            }
             item.Status = model.Status;
             RedisCacheHandler.SetValue(ConstantValue.TicketInfoKey, ticketList);
         }

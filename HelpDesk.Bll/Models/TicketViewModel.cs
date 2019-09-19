@@ -22,5 +22,6 @@ namespace HelpDesk.Bll.Models
         public int OnlineTime { get; set; }
         public string TicketType { get; set; }
         public string TicketTypeName { get; set; }
+        public int? EstimateTime { get; set; }
     }
 }

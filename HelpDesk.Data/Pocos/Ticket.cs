@@ -28,5 +28,6 @@ namespace HelpDesk.Data.Pocos
         public string AssignTo { get; set; }
         [StringLength(10)]
         public string TicketType { get; set; }
+        public int? EstimateTime { get; set; }
     }
 }
