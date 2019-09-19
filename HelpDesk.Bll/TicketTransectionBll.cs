@@ -90,6 +90,7 @@ namespace HelpDesk.Bll
             };
             _unitOfWork.GetRepository<TicketTransection>().Add(data);
             _unitOfWork.Complete();
+            this.SaveRedisCacheTicketTransection(data);
             return result;
         }
 
@@ -120,9 +121,10 @@ namespace HelpDesk.Bll
         private void UpdateTicket(int ticketId, string oldStatus)
         {
             var oldTransection = _unitOfWork.GetRepository<TicketTransection>().Get(
-                x => x.TicketId == ticketId && x.Status == oldStatus).FirstOrDefault();
+                x => x.TicketId == ticketId && x.Status == oldStatus && !x.EndDate.HasValue).FirstOrDefault();
             oldTransection.EndDate = DateTime.Now;
             _unitOfWork.GetRepository<TicketTransection>().Update(oldTransection);
+            this.UpdateRedisCacheTicketTransection(oldTransection);
             _unitOfWork.Complete();
         }
 
@@ -137,7 +139,7 @@ namespace HelpDesk.Bll
                 return this.FuncGetValue(data.TicketId.Value).ToList();
             });
             ticketList.Add(data);
-            RedisCacheHandler.SetValue(ConstantValue.TicketTransectionKey + data.Id.ToString(), ticketList);
+            RedisCacheHandler.SetValue(ConstantValue.TicketTransectionKey + data.TicketId.ToString(), ticketList);
         }
 
         /// <summary>
@@ -146,7 +148,7 @@ namespace HelpDesk.Bll
         /// <returns></returns>
         private IEnumerable<TicketTransection> FuncGetValue(int ticketId)
         {
-            return _unitOfWork.GetRepository<TicketTransection>().Get(x => x.Id == ticketId, x => x.OrderBy(y => y.Id));
+            return _unitOfWork.GetRepository<TicketTransection>().Get(x => x.TicketId == ticketId, x => x.OrderBy(y => y.Id));
         }
 
         /// <summary>
@@ -161,7 +163,7 @@ namespace HelpDesk.Bll
             });
             var item = ticketList.FirstOrDefault(x => x.Id == model.Id);
             item.EndDate = model.EndDate;
-            RedisCacheHandler.SetValue(ConstantValue.TicketTransectionKey, ticketList);
+            RedisCacheHandler.SetValue(ConstantValue.TicketTransectionKey + model.TicketId.ToString(), ticketList);
         }
 
         #endregion
