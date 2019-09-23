@@ -189,6 +189,7 @@ namespace HelpDesk.Bll
         {
             var result = new ResultViewModel();
             model.TicketNo = this.GenerateTicketNo();
+            model.AssignTo = this.GetAssignTo(model.TicketType);
             using (TransactionScope scope = new TransactionScope())
             {
                 var data = _mapper.Map<TicketViewModel, Ticket>(model);
@@ -422,6 +423,26 @@ namespace HelpDesk.Bll
         {
             var customer = _unitOfWork.GetRepository<Customer>().GetCache(x => x.Email == email).FirstOrDefault();
             return string.Format(ConstantValue.EmpTemplate, customer.FirstNameEn, customer.LastNameEn);
+        }
+
+        /// <summary>
+        /// Get assign ticket to company by ticket type.
+        /// </summary>
+        /// <param name="ticketType">The ticket type.</param>
+        /// <returns></returns>
+        private string GetAssignTo(string ticketType)
+        {
+            string comCode = string.Empty;
+            switch (ticketType)
+            {
+                case "EPR":
+                    comCode = "1001";
+                    break;
+                default:
+                    comCode = "1000";
+                    break;
+            }
+            return comCode;
         }
 
         #endregion
