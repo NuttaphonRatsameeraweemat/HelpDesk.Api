@@ -41,7 +41,7 @@ namespace HelpDesk.Api
 
             }).AddJsonOptions(options =>
             {
-                options.SerializerSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss";
+                options.SerializerSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.ffffzzz";
             });
             services.ConfigureSwagger();
         }
