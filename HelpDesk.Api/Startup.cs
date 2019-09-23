@@ -38,6 +38,10 @@ namespace HelpDesk.Api
             {
                 opt.UseApiGlobalConfigRoutePrefix(new RouteAttribute("api"));
                 opt.Filters.Add(typeof(ValidateModelStateAttribute));
+
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss";
             });
             services.ConfigureSwagger();
         }
