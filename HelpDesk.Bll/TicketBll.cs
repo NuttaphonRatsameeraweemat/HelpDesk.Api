@@ -435,7 +435,7 @@ namespace HelpDesk.Bll
             string comCode = string.Empty;
             switch (ticketType)
             {
-                case "EPR":
+                case "ERP":
                     comCode = "1001";
                     break;
                 default:
